@@ -1,0 +1,43 @@
+name: Create or Update File
+
+on:
+  push:
+    branches:
+      - master  # Trigger on push to the master branch
+  workflow_dispatch:  # Allow manual workflow triggers
+
+jobs:
+  create-update-file:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository
+    - name: Check out the repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Git
+    - name: Set up Git
+      run: |
+        git config --global user.name "Pavithran1508"
+        git config --global user.email "pavithrang4@gmail.com"
+
+    # Step 3: Create or update a file
+    - name: Create or Update File
+      run: |
+        # Switch to the feature branch (or create it if it doesn't exist)
+        git checkout feature || git checkout -b feature
+        
+        # Create or update the file
+        echo "Updated on $(date)" > updated-file.txt
+        
+        # Stage the file for commit
+        git add updated-file.txt
+
+    # Step 4: Commit and push the changes
+    - name: Commit and Push
+      run: |
+        # Commit changes with a message
+        git commit -m "Update file: $(date)" || echo "No changes to commit"
+        
+        # Push changes to the feature branch
+        git push origin feature
